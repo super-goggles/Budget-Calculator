@@ -61,10 +61,20 @@ class TransactionList {
     this.availableBudget();
   }
 
-  removeTransaction(id) {
+  removeIncomeTransaction(id) {
+    var newIncome = this.incomeList.find((income) => income.id === +id);
     this.incomeList = this.incomeList.filter((income) => income.id !== +id);
-    incomeTotal -= newIncomeAmount;
+    incomeTotal -= newIncome.amount;
     totalIncome.innerHTML = incomeTotal.toFixed(2);
+    this.render();
+    this.availableBudget();
+  }
+  
+  removeExpenseTransaction(id) {
+    var newExpense = this.expenseList.find((expense) => expense.id === +id);
+    this.expenseList = this.expenseList.filter((expense) => expense.id !== +id);
+    expenseTotal += +(newExpense.amount);
+    totalExpense.innerHTML = expenseTotal.toFixed(2);
     this.render();
     this.availableBudget();
   }
@@ -143,14 +153,21 @@ function handleAddNewTransaction(e) {
   }
 }
 
-function deleteTransactions(e) {
+function deleteIncomeTransactions(e) {
   const el = e.target;
   if (el.classList.contains("ion-ios-close-outline")) {
-    myTransactionList.removeTransaction(el.closest("article").dataset.id);
+    myTransactionList.removeIncomeTransaction(el.closest("article").dataset.id);
+  }
+}
+
+function deleteExpenseTransactions(e) {
+  const el = e.target;
+  if (el.classList.contains("ion-ios-close-outline")) {
+    myTransactionList.removeExpenseTransaction(el.closest("article").dataset.id);
   }
 }
 
 const myTransactionList = new TransactionList();
 buttonEl.addEventListener("click", handleAddNewTransaction);
-incomeEl.addEventListener("click", deleteTransactions);
-expenseEl.addEventListener("click", deleteTransactions);
+incomeEl.addEventListener("click", deleteIncomeTransactions);
+expenseEl.addEventListener("click", deleteExpenseTransactions);
